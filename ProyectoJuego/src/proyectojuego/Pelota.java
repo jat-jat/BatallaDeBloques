@@ -51,7 +51,12 @@ public class Pelota extends Sprite{
         areaCircular = new Ellipse2D.Float(0, 0, grafico.getWidth(), grafico.getHeight());
         area = areaCircular;
         
-        pintar();
+        //Creamos un color al azar.
+        Color colorA = new Color((int)(Math.random()*256), (int)(Math.random()*256), (int)(Math.random()*256));
+        //Obtenemos una versión más clara del mismo.
+        Color colorB = colorA.brighter().brighter();
+        //Pintamos la imagen de la pelota
+        pintar(grafico, colorA, colorB, null);
         
         posJ1 = j1.areaRectangular;
         posJ2 = j2.areaRectangular;
@@ -176,26 +181,6 @@ public class Pelota extends Sprite{
         //lienzo.drawImage(op.filter(grafico, null), (int)areaCircular.x, (int)areaCircular.y, null);
         
         lienzo.drawImage(grafico, (int)areaCircular.x, (int)areaCircular.y, null);
-    }
-    
-    /**
-     * Colorea una imagen de pelota recién cargada con un par de colores elegidos al azar.
-     * Este método no tendrá efecto si la imagen ya fue pintada una vez.
-     */
-    private void pintar(){
-        //Creamos un color al azar.
-        Color c = new Color((int)(Math.random()*256), (int)(Math.random()*256), (int)(Math.random()*256));
-        //Obtenemos versiones numéricas del color elegido y de una versión más clara del mismo.
-        int c1 = c.getRGB(), c2 = c.brighter().brighter().getRGB();
-        
-        //Visitamos todos los pixeles de la imagen y cambiamos el color donde sea necesario.
-        for(short i = 0; i < grafico.getWidth(); i++)
-            for(short j = 0; j < grafico.getHeight(); j++){
-                if(grafico.getRGB(i, j) == PALETA_DE_COLORES_1)
-                    grafico.setRGB(i, j, c1);
-                else if(grafico.getRGB(i, j) == PALETA_DE_COLORES_2)
-                    grafico.setRGB(i, j, c2);
-            }
     }
     
     public short getX(){

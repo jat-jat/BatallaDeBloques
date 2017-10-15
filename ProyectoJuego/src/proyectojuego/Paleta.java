@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.TexturePaint;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import static proyectojuego.Configuracion.*;
 
@@ -35,12 +36,19 @@ public class Paleta extends Sprite{
           Se puede hacer variable en el futuro.
         */
         areaRectangular = new Rectangle2D.Float(0, 0, 70, 10);
-        area = areaRectangular;
+        area = areaRectangular;        
         
         try {
-            //Creamos el patrón de relleno y cargamos la imagen necesaria.
-            //PENDIENTE: Hacer el relleno variable (hay otros 3 disponibles)
-            relleno = new TexturePaint((ImageIO.read(getClass().getResource("graficos/paleta_relleno2.png"))), new Rectangle(0, 0, 16, 15));
+            BufferedImage imgRelleno = ImageIO.read(getClass().getResource(IMG_RELLENOS[(int)(Math.random()*IMG_RELLENOS.length)]));
+            
+            //Creamos un color al azar.
+            Color colorA = new Color((int)(Math.random()*256), (int)(Math.random()*256), (int)(Math.random()*256));
+            //Obtenemos una versión más clara del mismo.
+            Color colorB = colorA.brighter().brighter();
+            //Pintamos la imagen de la pelota
+            pintar(imgRelleno, colorA, colorB, null);
+            
+            relleno = new TexturePaint(imgRelleno, new Rectangle(0, 0, imgRelleno.getWidth(), imgRelleno.getHeight()));
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("NO SE PUDO CARGAR UN RELLENO");

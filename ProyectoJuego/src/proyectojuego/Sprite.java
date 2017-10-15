@@ -1,9 +1,11 @@
 package proyectojuego;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.image.BufferedImage;
 import javax.xml.ws.Holder;
-import static proyectojuego.Configuracion.MOV_NULO;
+import static proyectojuego.Configuracion.*;
 
 /**
  * Clase abstracta que representa un objeto en pantalla móvil capaz de interactuar con otros elementos de su entorno.
@@ -126,5 +128,38 @@ public abstract class Sprite {
      */
     public boolean checarColision(short x, short y, short w, short h){
         return area.intersects(x, y, w, h);
+    }
+    
+    /**
+     * Colorea una imagen cargada.
+     * Este método no tendrá efecto si la imagen ya fue pintada una vez.
+     * Algunos parámtetros de color pueden ser nulos.
+     * @param img Una imagen con píxles RGB(1,0,0), RGB(0,1,0) y/o RGB(0,0,1).
+     * @param cA Con qué color se van a pintar los píxeles RGB(1,0,0).
+     * @param cB Con qué color se van a pintar los píxeles RGB(0,1,0).
+     * @param cC Con qué color se van a pintar los píxeles RGB(0,0,1).
+     * @see Configuracion.PALETA_DE_COLORES_1
+     */
+    public void pintar(BufferedImage img, Color cA, Color cB, Color cC){
+        //Valores numéricos de los colores
+        Integer c1, c2, c3;
+        
+        c1 = (cA != null ? cA.getRGB() : null);
+        c2 = (cB != null ? cB.getRGB() : null);
+        c3 = (cC != null ? cC.getRGB() : null);
+        
+        //Visitamos todos los pixeles de la imagen y cambiamos el color donde sea necesario.
+        int pixelActual;
+        for(short i = 0; i < img.getWidth(); i++)
+            for(short j = 0; j < img.getHeight(); j++){
+                pixelActual = img.getRGB(i, j);
+                
+                if(c1 != null && pixelActual == PALETA_DE_COLORES_1)
+                    img.setRGB(i, j, c1);
+                else if(c2 != null && pixelActual == PALETA_DE_COLORES_2)
+                    img.setRGB(i, j, c2);
+                else if(c3 != null && pixelActual == PALETA_DE_COLORES_3)
+                    img.setRGB(i, j, c3);
+            }
     }
 }

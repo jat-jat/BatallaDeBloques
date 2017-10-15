@@ -58,4 +58,5 @@ public final class Configuracion {
             IMG_BLOQUE_CHICO = "graficos/bloqueCh.png",
             FUENTE_DE_LETRA = "otros/wcp.ttf",
             FUENTE_DE_LETRA_NOMBRE = "Windows Command Prompt";
+    public static String[] IMG_RELLENOS = {"graficos/paleta_relleno1.png", "graficos/paleta_relleno2.png", "graficos/paleta_relleno3.png", "graficos/paleta_relleno4.png"};
 }
