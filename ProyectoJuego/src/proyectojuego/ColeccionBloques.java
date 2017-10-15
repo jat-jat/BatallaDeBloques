@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 import static proyectojuego.Configuracion.*;
 
 public class ColeccionBloques {
-
+    //esto es un prueba prro
     /**
      * Cuántas veces puede ser golpeado un bloque, como máximo,
      * antes de ser destruido.
