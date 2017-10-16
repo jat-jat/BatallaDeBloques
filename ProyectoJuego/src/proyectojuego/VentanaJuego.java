@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 
 public class VentanaJuego extends javax.swing.JFrame {
     Juego juego;
-    JFrame ventanaMenu;
+    Menu ventanaMenu;
     
     /**
      * Constructor por defecto
@@ -14,7 +14,7 @@ public class VentanaJuego extends javax.swing.JFrame {
      */
     public VentanaJuego(JFrame menu, String nivel) {
         initComponents();
-        ventanaMenu = menu;
+        ventanaMenu = (Menu) menu;
         
         juego = new Juego(nivel);
         this.setLayout(new BorderLayout());
@@ -49,6 +49,7 @@ public class VentanaJuego extends javax.swing.JFrame {
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         juego.liberarRecursos();
+        ventanaMenu.reiniciarMusica();
         ventanaMenu.setVisible(true);
         ventanaMenu = null;
     }//GEN-LAST:event_formWindowClosed

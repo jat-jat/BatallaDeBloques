@@ -67,6 +67,12 @@ public final class Configuracion {
             DISENO_NIVEL_2 = "otros/nivel2.txt",
             DISENO_NIVEL_3 = "otros/nivel3.txt",
             DISENO_NIVEL_4 = "otros/nivel4.txt",
+            MUSICA_NIVEL_1 = "audio/16x.xm",
+            MUSICA_NIVEL_2 = "audio/manic miner samba.xm",
+            MUSICA_NIVEL_3 = "audio/space-patrol.xm",
+            MUSICA_NIVEL_4 = "audio/serkku kiljuhanhi.xm",
+            MUSICA_NIVEL_RANDOM = "audio/silver.xm",
+            MUSICA_MENU = "audio/story.xm",
             FUENTE_DE_LETRA = "otros/wcp.ttf",
             FUENTE_DE_LETRA_NOMBRE = "Windows Command Prompt";
     public static final String[] IMG_RELLENOS = {"graficos/paleta_relleno1.png", "graficos/paleta_relleno2.png", "graficos/paleta_relleno3.png", "graficos/paleta_relleno4.png"};

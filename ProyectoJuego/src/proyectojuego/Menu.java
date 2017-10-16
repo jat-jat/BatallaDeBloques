@@ -2,23 +2,35 @@ package proyectojuego;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+import java.io.File;
 import javax.swing.JOptionPane;
 import static proyectojuego.Configuracion.*;
 
 public class Menu extends javax.swing.JFrame {
+    private Reproductor player;
     
     public Menu() {
         initComponents();
-        
+        player = new Reproductor();
         //Cargamos nuestra fuente de letra.
         try {
+            reiniciarMusica();
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream(FUENTE_DE_LETRA)));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+    
+    public void reiniciarMusica(){
+        try {
+            player.detener();
+            player.cargarArchivo(getClass().getResourceAsStream(MUSICA_MENU));
+            
+            if(opcionSonido.isSelected())
+                player.reproducir();
+        } catch (Exception e) {}
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -49,6 +61,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
 
+        opcionSonido.setSelected(true);
         opcionSonido.setText("Música");
         opcionSonido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -117,32 +130,45 @@ public class Menu extends javax.swing.JFrame {
 
     private void opcionSonidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionSonidoActionPerformed
         if(opcionSonido.isSelected()){
-            
+            player.reproducir();
         }
         else{
-            
+            player.detener();
         }
     }//GEN-LAST:event_opcionSonidoActionPerformed
 
     private void btnJugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJugarActionPerformed
         setVisible(false);
-        String nivel;
+        String nivel, musica;
         
         switch(selectorNivel.getSelectedIndex()){
             case 0:
                 nivel = DISENO_NIVEL_1;
+                musica = MUSICA_NIVEL_1;
                 break;
             case 1:
                 nivel = DISENO_NIVEL_2;
+                musica = MUSICA_NIVEL_2;
                 break;
             case 2:
                 nivel = DISENO_NIVEL_3;
+                musica = MUSICA_NIVEL_3;
                 break;
             case 3:
                 nivel = DISENO_NIVEL_4;
+                musica = MUSICA_NIVEL_4;
                 break;
             default:
                 nivel = null;
+                musica = MUSICA_NIVEL_RANDOM;
+        }
+        
+        if(player.estaReproduciendo()){
+            try {
+                player.detener();
+                player.cargarArchivo(getClass().getResourceAsStream(musica));
+                player.reproducir();
+            } catch (Exception e) {}
         }
         
         new VentanaJuego(this, nivel).setVisible(true);

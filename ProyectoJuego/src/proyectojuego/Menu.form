@@ -88,6 +88,7 @@
     </Component>
     <Component class="javax.swing.JToggleButton" name="opcionSonido">
       <Properties>
+        <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" value="M&#xfa;sica"/>
       </Properties>
       <Events>
