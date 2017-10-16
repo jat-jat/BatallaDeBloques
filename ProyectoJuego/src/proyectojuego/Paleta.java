@@ -9,6 +9,10 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import static proyectojuego.Configuracion.*;
 
+/**
+ * Clase que representa a la paleta de un jugador, presente en la parte superior o inferior de la pantalla.
+ * @author Javier Alberto Argüello Tello
+ */
 public class Paleta extends Sprite{
     /**
      * Objeto que representa el área de colisión (que es rectangular) de este sprite.
@@ -22,8 +26,9 @@ public class Paleta extends Sprite{
      */
     private TexturePaint relleno;
     
-    byte vidas;
-    short puntos;
+    //PENDIENTE: Hacer privado
+    public byte vidas;
+    public short puntos;
     
     /**
      * Constructor por defecto.
@@ -61,9 +66,30 @@ public class Paleta extends Sprite{
         else
             areaRectangular.y = (short) (ESCENARIO_ALTO - areaRectangular.height);
         
-        //PENDIENTE: Agregar métodos get y set para estos 2 atributos,
-        velocidad = 3;
-        vidas = 3;
+        vidas = 2;
+        velocidadInicial = 3;
+        reiniciarVelocidad();
+    }
+    
+    public void ganarVida(){
+        vidas++;
+    }
+    
+    public boolean perderVida(){
+        vidas--;
+        return vidas == 0;
+    }
+    
+    public byte getVidas(){
+        return vidas;
+    }
+    
+    public void ganarPunto(){
+        puntos++;
+    }
+    
+    public short getPuntos(){
+        return puntos;
     }
     
     @Override
@@ -77,7 +103,7 @@ public class Paleta extends Sprite{
                 synchronized(movimientoHor){
                     movimientoHor.wait();
                 }
-            }            
+            }
             
             seEstaMoviendo = true;
             
@@ -118,11 +144,6 @@ public class Paleta extends Sprite{
                 movimientoHor.notify();
             }
         }
-    }
-
-    @Override
-    public boolean seEstaMoviendo() {
-        return seEstaMoviendo;
     }
     
     @Override

@@ -6,8 +6,13 @@ import java.awt.Shape;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import proyectojuego.AdminPoderes.TipoPoder;
 import static proyectojuego.Configuracion.*;
 
+/**
+ * Clase que administra todos los bloques presentes en el campo de juego.
+ * @author Javier Alberto Argüello Tello
+ */
 public class ColeccionBloques {    
     /**
      * Cuántas veces puede ser golpeado un bloque, como máximo,
@@ -30,7 +35,7 @@ public class ColeccionBloques {
     enum Tamano { GRANDE, MEDIANO, CHICO }
     
     public ColeccionBloques(){
-        bloques = new ArrayList();
+        bloques = new ArrayList<>();
         Color[] colores = new Color[VIDA_MAXIMA];
         colores[0] = new Color(220, 0, 0);
         colores[1] = new Color(255, 204, 0);
@@ -110,18 +115,22 @@ public class ColeccionBloques {
      * ser así, disimuye la vida (y elimina, de ser necesario)
      * el bloque que fue colisionado.
      * @param s Un sprite, por defecto, la pelota.
-     * @return Si hay colisión.
+     * @return Si hay colisión y el bloque fue destruido, el poder que almacenaba el bloque.
+     * Si hay colisión y el bloque no fue destruido, el tipo de poder "NINGUNO".
+     * Si no hubo colisión, null.
      */
-    public boolean checarColision(Sprite s){
+    public TipoPoder checarColision(Sprite s){
         for(Bloque aux : bloques){
             if(aux.hayColision(s.area)){
-                if(--aux.vida == 0)
+                if(--aux.vida == 0){
                     bloques.remove(aux);
-                return true;
+                    return aux.poder;
+                }
+                return TipoPoder.NINGUNO;
             }
         }
         
-        return false;
+        return null;
     }
     
     //PENDIENTE: Decidir si crear una interfaz "Renderizable", implementada por esta clase y por Sprite.
@@ -132,6 +141,7 @@ public class ColeccionBloques {
     
     private class Bloque{
         Tamano tam;
+        TipoPoder poder;
         //Posición
         short posX, posY;
         byte vida;
@@ -146,6 +156,23 @@ public class ColeccionBloques {
             else if (vida > VIDA_MAXIMA)
                 vida = VIDA_MAXIMA;
             this.vida = vida;
+            
+            //Elegimos un poder para el bloque al azar.
+            byte auxPoder = (byte)(Math.random() * 31);
+            if(auxPoder == 4 || auxPoder == 5)
+                poder = TipoPoder.VELOCIDAD_PALETA_DISMINUIR;
+            else if(auxPoder == 6 || auxPoder == 7)
+                poder = TipoPoder.VELOCIDAD_PALETA_AUMENTAR;
+            else if(auxPoder >= 11 && auxPoder <= 20)
+                poder = TipoPoder.PUNTOS;
+            else if(auxPoder == 23 || auxPoder == 24)
+                poder = TipoPoder.VELOCIDAD_PELOTA_DISMINUIR;
+            else if(auxPoder == 25 || auxPoder == 26)
+                poder = TipoPoder.VELOCIDAD_PELOTA_AUMENTAR;
+            else if(auxPoder == 0 || auxPoder == 30)
+                poder = TipoPoder.VIDA;
+            else
+                poder = TipoPoder.NINGUNO;
         }
         
         boolean hayColision(Shape x){

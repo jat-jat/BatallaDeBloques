@@ -41,6 +41,11 @@ public abstract class Sprite {
     protected byte velocidad;
     
     /**
+     * Velocidad default.
+     */
+    protected byte velocidadInicial;
+    
+    /**
      * Constructor por defecto.
      */
     public Sprite(){
@@ -54,6 +59,7 @@ public abstract class Sprite {
                 try {
                     mover();
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -82,7 +88,9 @@ public abstract class Sprite {
      * Permite saber si el sprite está en movimiento.
      * @return Un booleano.
      */
-    public abstract boolean seEstaMoviendo();
+    public boolean seEstaMoviendo(){
+        return seEstaMoviendo;
+    };
     
     /**
      * Dibuja este sprite en un fotograma que será mostrado en pantalla.
@@ -128,6 +136,29 @@ public abstract class Sprite {
      */
     public boolean checarColision(short x, short y, short w, short h){
         return area.intersects(x, y, w, h);
+    }
+    
+    /**
+     * Aumenta la velocidad, si es posible.
+     */
+    public void acelerar(){
+        if(velocidad < VELOCIDAD_MAX)
+            velocidad++;
+    }
+    
+    /**
+     * Disminuye la velocidad, si es posible.
+     */
+    public void alentar(){
+        if(velocidad > VELOCIDAD_MIN)
+            velocidad--;
+    }
+    
+    /**
+     * Disminuye la velocidad, si es posible.
+     */
+    public void reiniciarVelocidad(){
+        velocidad = velocidadInicial;
     }
     
     /**

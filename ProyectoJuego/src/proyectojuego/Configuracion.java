@@ -1,5 +1,7 @@
 package proyectojuego;
 
+import java.awt.Font;
+
 /**
  * Contenedor de la mayoría de las constantes de todo el programa.
  * @author Javier
@@ -51,12 +53,15 @@ public final class Configuracion {
     /**
      * Las ubicaciones de todos los recursos.
      */
-    public static String
+    public static final String
             IMG_PELOTA = "graficos/pelota.png",
             IMG_BLOQUE_GRANDE = "graficos/bloqueG.png",
             IMG_BLOQUE_MEDIANO = "graficos/bloqueM.png",
             IMG_BLOQUE_CHICO = "graficos/bloqueCh.png",
+            IMG_PODER = "graficos/poder.png",
             FUENTE_DE_LETRA = "otros/wcp.ttf",
             FUENTE_DE_LETRA_NOMBRE = "Windows Command Prompt";
-    public static String[] IMG_RELLENOS = {"graficos/paleta_relleno1.png", "graficos/paleta_relleno2.png", "graficos/paleta_relleno3.png", "graficos/paleta_relleno4.png"};
+    public static final String[] IMG_RELLENOS = {"graficos/paleta_relleno1.png", "graficos/paleta_relleno2.png", "graficos/paleta_relleno3.png", "graficos/paleta_relleno4.png"};
+    
+    public static final Font fuente = new Font(FUENTE_DE_LETRA_NOMBRE, Font.PLAIN, (int)(BARRA_PUNTUACIONES_ALTO * 1.3));
 }

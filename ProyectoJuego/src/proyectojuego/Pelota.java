@@ -8,6 +8,10 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import static proyectojuego.Configuracion.*;
 
+/**
+ * Clase que representa a la pelota del juego.
+ * @author Javier Alberto Argüello Tello
+ */
 public class Pelota extends Sprite{
     /**
      * Objeto que representa el área de colisión (que es circular) de este sprite.
@@ -61,7 +65,8 @@ public class Pelota extends Sprite{
         posJ1 = j1.areaRectangular;
         posJ2 = j2.areaRectangular;
             
-        velocidad = 3;
+        velocidadInicial = 3;
+        reiniciarVelocidad();
     }
     
     @Override
@@ -170,11 +175,6 @@ public class Pelota extends Sprite{
     }
     
     @Override
-    public boolean seEstaMoviendo() {
-        return seEstaMoviendo;
-    }
-    
-    @Override
     public void renderizar(Graphics2D lienzo) {
         //PENDIENTE: Cógido para mostrar la bola girando
         //AffineTransformOp op = new AffineTransformOp(AffineTransform.getRotateInstance(Math.toRadians(++rotacion), areaCircular.width / 2, areaCircular.height / 2), AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
@@ -185,5 +185,9 @@ public class Pelota extends Sprite{
     
     public short getX(){
         return (short)areaCircular.x;
+    }
+    
+    public short getY(){
+        return (short)areaCircular.y;
     }
 }

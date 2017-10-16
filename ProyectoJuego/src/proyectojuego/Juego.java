@@ -1,7 +1,6 @@
 package proyectojuego;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -13,17 +12,16 @@ public class Juego extends javax.swing.JPanel {
     private Paleta jugador1, jugador2;
     private Pelota pelota;
     private ColeccionBloques bloques;
+    private AdminPoderes poderes;
     
     //Variables relacionadas con la barra de progreso.
     private final float alturaTotal;
-    private final Font fuente;
     private final short posInfoJ2; //Posición en X donde se imprime la información del jugador #2.
     
     public Juego() {
         initComponents();
         
         alturaTotal = ESCENARIO_ALTO + BARRA_PUNTUACIONES_ALTO;
-        fuente = new Font(FUENTE_DE_LETRA_NOMBRE, Font.PLAIN, (int)(BARRA_PUNTUACIONES_ALTO * 1.3));
         posInfoJ2 = (short)((ESCENARIO_ANCHO / 8.0) * 3);
         
         this.addKeyListener((new KeyListener() {
@@ -79,44 +77,64 @@ public class Juego extends javax.swing.JPanel {
         jugador2 = new Paleta(JUGADOR_2);
         pelota = new Pelota(jugador1, jugador2);
         bloques = new ColeccionBloques();
+        poderes = new AdminPoderes();
         
         Thread renderizacion = new Thread(() -> {
+            AdminPoderes.TipoPoder x;
             while(true){
                 try {
                     if(pelota.movimientoHor.value != MOV_NULO && pelota.movimientoVer.value != MOV_NULO){                        
-                        if (bloques.checarColision(pelota)){
-                            //Cuando la pelota choca con un bloque
+                        x = bloques.checarColision(pelota);
+                        //Cuando la pelota choca con un bloque
+                        if (x != null){
                             pelota.movimientoHor.value = !pelota.movimientoHor.value;
                             pelota.movimientoVer.value = !pelota.movimientoVer.value;
                             
                             //El propietario de la pelota gana puntos.
                             if(pelota.propietario == JUGADOR_1)
-                                jugador1.puntos++;
+                                jugador1.ganarPunto();
                             else
-                                jugador2.puntos++;
+                                jugador2.ganarPunto();
+                            
+                            //Creamos un poder si se da el caso
+                            if(x != AdminPoderes.TipoPoder.NINGUNO)
+                                poderes.crearPoder(x, pelota.getX(), pelota.getY(), pelota.propietario);
+                        }
+                        
+                        //Si hay poderes en pantalla
+                        if(poderes.seEstaMoviendo()){
+                            //Vemos si cada jugador tocó un poder. De ser así, el poder desaparece y surte efecto.
+                            aplicarPoder(poderes.checarColisionYObtenerPoder(jugador1));
+                            aplicarPoder(poderes.checarColisionYObtenerPoder(jugador2));
                         }
                         
                         //El juego acaba porque: se acabaron los bloques.
                         if(bloques.yaNoHayBloques()){
                             pelota.movimientoHor.value = pelota.movimientoVer.value = MOV_NULO;
-                            JOptionPane.showMessageDialog(null, "El jugador " + (jugador2.puntos > jugador1.puntos ? "2" : "1") + " ganó.");
+                            JOptionPane.showMessageDialog(null, "El jugador " + (jugador2.getPuntos() > jugador1.getPuntos() ? "2" : "1") + " ganó.");
                             reiniciarPartida();
                         }
                     } else if(pelota.movimientoHor.value == MOV_NULO && pelota.movimientoVer.value == MOV_NULO){
-                        //Cuando el juego se acaba.
+                        //Cuando el juego termina.
+                        boolean elJugador1Perdio = false, elJugador2Perdio = false;
                         
                         //Quien se haya quedado con la propiedad de la pelota, pierde una vida.
-                        if(pelota.propietario == JUGADOR_1)
-                            jugador1.vidas--;
-                        else
-                            jugador2.vidas--;
+                        if(pelota.propietario == JUGADOR_1){
+                            elJugador1Perdio = jugador1.perderVida();
+                            jugador1.reiniciarVelocidad();
+                        }
+                        else{
+                            elJugador2Perdio = jugador2.perderVida();
+                            jugador2.reiniciarVelocidad();
+                        }
                         
                         //El juego acaba porque: un jugador perdió sus vidas.
-                        if(jugador1.vidas == 0 || jugador2.vidas == 0){
-                            JOptionPane.showMessageDialog(null, "El jugador " + (jugador1.vidas == 0 ? "2" : "1") + " ganó.");
+                        if(elJugador1Perdio || elJugador2Perdio){
+                            JOptionPane.showMessageDialog(null, "El jugador " + (elJugador1Perdio ? "2" : "1") + " ganó.");
                             reiniciarPartida();
                         }
                         
+                        pelota.reiniciarVelocidad();
                         pelota.iniciarMovimiento(false);
                     }
                     
@@ -137,6 +155,43 @@ public class Juego extends javax.swing.JPanel {
         //Estas instrucciones son necesarias para que los eventos del teclado se puedan ejecutar.
         setFocusable(true);
         requestFocusInWindow();
+    }
+    
+    private void aplicarPoder(InfoPoder poderObtenido){
+        //Si el poder no es nulo, quiere decir que hubo colisión y el poder tocado desapareció
+        if(poderObtenido != null){
+            switch(poderObtenido.getTipo()){
+                case PUNTOS:
+                    if(poderObtenido.getJugador() == JUGADOR_1)
+                        jugador1.ganarPunto();
+                    else
+                        jugador2.ganarPunto();
+                    break;
+                case VELOCIDAD_PALETA_AUMENTAR:
+                    if(poderObtenido.getJugador() == JUGADOR_1)
+                        jugador1.acelerar();
+                    else
+                        jugador2.acelerar();
+                    break;
+                case VELOCIDAD_PALETA_DISMINUIR:
+                    if(poderObtenido.getJugador() == JUGADOR_1)
+                        jugador1.alentar();
+                    else
+                        jugador2.alentar();
+                    break;
+                case VELOCIDAD_PELOTA_AUMENTAR:
+                    pelota.acelerar();
+                    break;
+                case VELOCIDAD_PELOTA_DISMINUIR:
+                    pelota.alentar();
+                    break;
+                case VIDA:
+                    if(poderObtenido.getJugador() == JUGADOR_1)
+                        jugador1.ganarVida();
+                    else
+                        jugador2.ganarVida();
+            }
+        }
     }
     
     //PENDIENTE: Mejorar este método.
@@ -164,15 +219,16 @@ public class Juego extends javax.swing.JPanel {
         jugador2.renderizar(lienzo);
         pelota.renderizar(lienzo);
         bloques.renderizar(lienzo);
+        poderes.renderizar(lienzo);
         
         //Pintamos la barra de estado.
         lienzo.setPaint(Color.BLACK);
         lienzo.fillRect(0, ESCENARIO_ALTO, ESCENARIO_ANCHO, BARRA_PUNTUACIONES_ALTO);
         lienzo.setFont(fuente);
         lienzo.setPaint(Color.GREEN);
-        lienzo.drawString("J1: " + jugador1.vidas + "up - " + jugador1.puntos + " p.", 0, ESCENARIO_ALTO + BARRA_PUNTUACIONES_ALTO - 2);
+        lienzo.drawString("J1: " + jugador1.getVidas() + "up - " + jugador1.getPuntos() + " p.", 0, ESCENARIO_ALTO + BARRA_PUNTUACIONES_ALTO - 2);
         lienzo.setPaint(Color.YELLOW);
-        lienzo.drawString("J2: " + jugador2.vidas + "up - " + jugador2.puntos + " p.", posInfoJ2, ESCENARIO_ALTO + BARRA_PUNTUACIONES_ALTO - 2);
+        lienzo.drawString("J2: " + jugador2.getVidas() + "up - " + jugador2.getPuntos() + " p.", posInfoJ2, ESCENARIO_ALTO + BARRA_PUNTUACIONES_ALTO - 2);
     }
 
     @Override
