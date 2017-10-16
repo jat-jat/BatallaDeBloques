@@ -63,6 +63,10 @@ public final class Configuracion {
             SFX_GOLPEAR_UN_BLOQUE = "audio/sfx_golpe.mp3",
             SFX_PERDER_UNA_VIDA = "audio/sfx_lose.mp3",
             SFX_REBOTE_DE_PELOTA = "audio/sfx_rebote.mp3",
+            DISENO_NIVEL_1 = "otros/nivel1.txt",
+            DISENO_NIVEL_2 = "otros/nivel2.txt",
+            DISENO_NIVEL_3 = "otros/nivel3.txt",
+            DISENO_NIVEL_4 = "otros/nivel4.txt",
             FUENTE_DE_LETRA = "otros/wcp.ttf",
             FUENTE_DE_LETRA_NOMBRE = "Windows Command Prompt";
     public static final String[] IMG_RELLENOS = {"graficos/paleta_relleno1.png", "graficos/paleta_relleno2.png", "graficos/paleta_relleno3.png", "graficos/paleta_relleno4.png"};

@@ -3,7 +3,7 @@ package proyectojuego;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import javax.swing.JOptionPane;
-import static proyectojuego.Configuracion.FUENTE_DE_LETRA;
+import static proyectojuego.Configuracion.*;
 
 public class Menu extends javax.swing.JFrame {
     
@@ -28,19 +28,19 @@ public class Menu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        titulo = new javax.swing.JLabel();
         acercaDe = new javax.swing.JButton();
         opcionSonido = new javax.swing.JToggleButton();
         selectorNivel = new javax.swing.JComboBox<>();
         btnJugar = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JSeparator();
+        barrita = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Menú");
         setResizable(false);
 
-        jLabel1.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
-        jLabel1.setText("Batalla de bloques");
+        titulo.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
+        titulo.setText("Batalla de bloques");
 
         acercaDe.setText("Acerca de");
         acercaDe.addActionListener(new java.awt.event.ActionListener() {
@@ -49,7 +49,6 @@ public class Menu extends javax.swing.JFrame {
             }
         });
 
-        opcionSonido.setSelected(true);
         opcionSonido.setText("Música");
         opcionSonido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -68,8 +67,8 @@ public class Menu extends javax.swing.JFrame {
             }
         });
 
-        jSeparator1.setBackground(new java.awt.Color(204, 204, 204));
-        jSeparator1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        barrita.setBackground(new java.awt.Color(204, 204, 204));
+        barrita.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -83,25 +82,25 @@ public class Menu extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnJugar))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addComponent(titulo)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(opcionSonido)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(acercaDe))
-                    .addComponent(jSeparator1))
+                    .addComponent(barrita))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel1)
+                .addComponent(titulo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(selectorNivel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnJugar))
                 .addGap(2, 2, 2)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(barrita, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(opcionSonido)
@@ -127,7 +126,26 @@ public class Menu extends javax.swing.JFrame {
 
     private void btnJugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJugarActionPerformed
         setVisible(false);
-        new VentanaJuego(this).setVisible(true);
+        String nivel;
+        
+        switch(selectorNivel.getSelectedIndex()){
+            case 0:
+                nivel = DISENO_NIVEL_1;
+                break;
+            case 1:
+                nivel = DISENO_NIVEL_2;
+                break;
+            case 2:
+                nivel = DISENO_NIVEL_3;
+                break;
+            case 3:
+                nivel = DISENO_NIVEL_4;
+                break;
+            default:
+                nivel = null;
+        }
+        
+        new VentanaJuego(this, nivel).setVisible(true);
     }//GEN-LAST:event_btnJugarActionPerformed
 
     /**
@@ -167,10 +185,10 @@ public class Menu extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton acercaDe;
+    private javax.swing.JSeparator barrita;
     private javax.swing.JButton btnJugar;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JToggleButton opcionSonido;
     private javax.swing.JComboBox<String> selectorNivel;
+    private javax.swing.JLabel titulo;
     // End of variables declaration//GEN-END:variables
 }

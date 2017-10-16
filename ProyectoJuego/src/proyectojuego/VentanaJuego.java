@@ -1,10 +1,7 @@
 package proyectojuego;
 
 import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.GraphicsEnvironment;
 import javax.swing.JFrame;
-import static proyectojuego.Configuracion.*;
 
 public class VentanaJuego extends javax.swing.JFrame {
     Juego juego;
@@ -13,12 +10,13 @@ public class VentanaJuego extends javax.swing.JFrame {
     /**
      * Constructor por defecto
      * @param menu El JFrame de la pantalla principal (el menú).
+     * @param nivel Ruta de un archivo con la definición de un nivel, o nulo.
      */
-    public VentanaJuego(JFrame menu) {
+    public VentanaJuego(JFrame menu, String nivel) {
         initComponents();
         ventanaMenu = menu;
         
-        juego = new Juego();
+        juego = new Juego(nivel);
         this.setLayout(new BorderLayout());
         this.add(juego);
         setTitle("Batalla de bloques - Versión Alpha");

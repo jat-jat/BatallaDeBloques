@@ -6,7 +6,9 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javafx.scene.media.AudioClip;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import static proyectojuego.Configuracion.*;
 
 public class Juego extends javax.swing.JPanel {
@@ -22,7 +24,7 @@ public class Juego extends javax.swing.JPanel {
     
     private boolean renderizar;
     
-    public Juego() {
+    public Juego(String nivel) {
         initComponents();
         
         sfx_bonus = new AudioClip(getClass().getResource(SFX_OBTENCION_DE_BONUS).toString());
@@ -86,7 +88,7 @@ public class Juego extends javax.swing.JPanel {
         jugador1 = new Paleta(JUGADOR_1);
         jugador2 = new Paleta(JUGADOR_2);
         pelota = new Pelota(jugador1, jugador2);
-        bloques = new ColeccionBloques();
+        bloques = new ColeccionBloques(nivel);
         poderes = new AdminPoderes();
         
         Thread renderizacion = new Thread(() -> {
@@ -124,7 +126,8 @@ public class Juego extends javax.swing.JPanel {
                         if(bloques.yaNoHayBloques()){
                             pelota.movimientoHor.value = pelota.movimientoVer.value = MOV_NULO;
                             JOptionPane.showMessageDialog(null, "El jugador " + (jugador2.getPuntos() > jugador1.getPuntos() ? "2" : "1") + " ganó.");
-                            reiniciarPartida();
+                            liberarRecursos();
+                            ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
                         }
                     } else if(pelota.movimientoHor.value == MOV_NULO && pelota.movimientoVer.value == MOV_NULO){
                         //Cuando el juego termina.
@@ -145,7 +148,8 @@ public class Juego extends javax.swing.JPanel {
                         //El juego acaba porque: un jugador perdió sus vidas.
                         if(elJugador1Perdio || elJugador2Perdio){
                             JOptionPane.showMessageDialog(null, "El jugador " + (elJugador1Perdio ? "2" : "1") + " ganó.");
-                            reiniciarPartida();
+                            liberarRecursos();
+                            ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
                         }
                         
                         pelota.reiniciarVelocidad();
@@ -208,15 +212,6 @@ public class Juego extends javax.swing.JPanel {
                         jugador2.ganarVida();
             }
         }
-    }
-    
-    //PENDIENTE: Mejorar este método.
-    public void reiniciarPartida(){
-        jugador1.vidas = 3;
-        jugador2.vidas = 3;
-        jugador1.puntos = 0;
-        jugador2.puntos = 0;
-        bloques.crearBloques();
     }
     
     /**

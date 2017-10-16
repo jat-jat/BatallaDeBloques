@@ -103,9 +103,9 @@ public class AdminPoderes extends Sprite{
      * @return El poder que ganó el jugador, o nulo, si no hubo colisión.
      */
     public InfoPoder checarColisionYObtenerPoder(Sprite s){
-        for(Poder aux : poderes){
-            if(aux.hayColision(s)){
-                poderes.remove(aux);
+        for(byte i = 0; i < poderes.size(); i++){
+            if(poderes.get(i).hayColision(s)){
+                Poder aux = poderes.remove(i);
                 return new InfoPoder(aux.tipo, aux.jugador);
             }
         }

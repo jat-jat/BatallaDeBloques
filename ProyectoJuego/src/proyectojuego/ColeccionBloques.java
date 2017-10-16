@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import proyectojuego.AdminPoderes.TipoPoder;
@@ -18,7 +22,7 @@ public class ColeccionBloques {
      * Cuántas veces puede ser golpeado un bloque, como máximo,
      * antes de ser destruido.
      */
-    public static final byte VIDA_MAXIMA = 3;
+    public static final byte VIDA_MAXIMA = 5;
     
     /**
      * Lista con todos los bloques.
@@ -34,12 +38,19 @@ public class ColeccionBloques {
     
     enum Tamano { GRANDE, MEDIANO, CHICO }
     
-    public ColeccionBloques(){
+    /**
+     * Constructor.
+     * @param nivel Ruta del archivo con la definición de un nivel, o nulo.
+     */
+    public ColeccionBloques(String nivel){
         bloques = new ArrayList<>();
         Color[] colores = new Color[VIDA_MAXIMA];
         colores[0] = new Color(220, 0, 0);
         colores[1] = new Color(255, 204, 0);
         colores[2] = new Color(51, 204, 51);
+        colores[3] = new Color(105, 94, 255);
+        colores[4] = new Color(128, 128, 128);
+        
         
         for(byte i = 0; i < 3; i++){
             BufferedImage img = null;
@@ -87,19 +98,49 @@ public class ColeccionBloques {
                 }
         }
         
-        crearBloques();
+        crearBloques(nivel);
     }
-    
-    //PENDIENTE: Hacer que los bloqueas sean creados a partir de un archivo.
-    //De tal modo que se tenga un archivo por nivel.
-    public void crearBloques(){
-        bloques.add(new Bloque(Tamano.GRANDE, (byte)(Math.random()*VIDA_MAXIMA + 1), (short)0, (short)65));
-        bloques.add(new Bloque(Tamano.GRANDE, (byte)(Math.random()*VIDA_MAXIMA + 1), (short)270, (short)65));
-        bloques.add(new Bloque(Tamano.MEDIANO, (byte)(Math.random()*VIDA_MAXIMA + 1), (short)75, (short)150));
-        bloques.add(new Bloque(Tamano.MEDIANO, (byte)(Math.random()*VIDA_MAXIMA + 1), (short)210, (short)150));
-        bloques.add(new Bloque(Tamano.CHICO, (byte)(Math.random()*VIDA_MAXIMA + 1), (short)0, (short)110));
-        bloques.add(new Bloque(Tamano.CHICO, (byte)(Math.random()*VIDA_MAXIMA + 1), (short)150, (short)110));
-        bloques.add(new Bloque(Tamano.CHICO, (byte)(Math.random()*VIDA_MAXIMA + 1), (short)295, (short)110));
+
+    /**
+     * Crea los bloques de la partida.
+     * @param archivo La ruta a un archivo con lo datos de los bloques, o nulo, para generar un nivel random.
+     */
+    public void crearBloques(String archivo){
+        BufferedReader br = null;
+        InputStreamReader fr = null;
+
+        try {
+            fr = new InputStreamReader(getClass().getResourceAsStream(archivo));
+            br = new BufferedReader(fr);
+            
+            String linea;
+            String[] parametros;
+            
+            while ((linea = br.readLine()) != null) {
+                parametros = linea.split(",");
+                if(parametros.length == 4)
+                    bloques.add(new Bloque((parametros[0].equalsIgnoreCase("G") ? Tamano.GRANDE : parametros[0].equalsIgnoreCase("M") ? Tamano.MEDIANO : Tamano.CHICO), Byte.parseByte(parametros[3]), Short.parseShort(parametros[1]), Short.parseShort(parametros[2])));
+            }
+        } catch (Exception e) {
+            if(archivo != null)
+                e.printStackTrace();
+            
+            //Creamos bloques al azar
+            byte tam;
+            bloques.clear();
+            for(byte i = 0; i < 20; i++){
+                tam = (byte)(Math.random() * 3);
+                
+                bloques.add(new Bloque((tam == 0 ? Tamano.GRANDE : tam == 1 ? Tamano.MEDIANO : Tamano.CHICO), (byte)(Math.random() * VIDA_MAXIMA + 1), (short)(Math.random() * (ESCENARIO_ANCHO - 50)), (short)((Math.random() * (ESCENARIO_ALTO - 80)) + 30)));
+            }
+        } finally{
+            try {
+                if(br != null)
+                    br.close();
+                if(fr != null)
+                    fr.close();
+            } catch (Exception e) {}
+        }
     }
     
     /**
