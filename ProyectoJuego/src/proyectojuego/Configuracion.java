@@ -59,6 +59,10 @@ public final class Configuracion {
             IMG_BLOQUE_MEDIANO = "graficos/bloqueM.png",
             IMG_BLOQUE_CHICO = "graficos/bloqueCh.png",
             IMG_PODER = "graficos/poder.png",
+            SFX_OBTENCION_DE_BONUS = "audio/sfx_bonus.mp3",
+            SFX_GOLPEAR_UN_BLOQUE = "audio/sfx_golpe.mp3",
+            SFX_PERDER_UNA_VIDA = "audio/sfx_lose.mp3",
+            SFX_REBOTE_DE_PELOTA = "audio/sfx_rebote.mp3",
             FUENTE_DE_LETRA = "otros/wcp.ttf",
             FUENTE_DE_LETRA_NOMBRE = "Windows Command Prompt";
     public static final String[] IMG_RELLENOS = {"graficos/paleta_relleno1.png", "graficos/paleta_relleno2.png", "graficos/paleta_relleno3.png", "graficos/paleta_relleno4.png"};

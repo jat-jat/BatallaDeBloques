@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import javafx.scene.media.AudioClip;
 import javax.imageio.ImageIO;
 import static proyectojuego.Configuracion.*;
 
@@ -39,6 +40,8 @@ public class Pelota extends Sprite{
      */
     private final Rectangle2D.Float posJ1, posJ2;
     
+    private final AudioClip sfx_rebotar;
+    
     /**
      * Constructor por defecto.
      * Recibe a los jugadores como parámetro para obtener espejos de sus áreas de colisión.
@@ -46,10 +49,14 @@ public class Pelota extends Sprite{
      * @param j2 El objeto que representa al jugador 2.
      */
     public Pelota(Paleta j1, Paleta j2){
+        sfx_rebotar = new AudioClip(getClass().getResource(SFX_REBOTE_DE_PELOTA).toString());
+        
         try {
             grafico = ImageIO.read(getClass().getResource(IMG_PELOTA));
         } catch (Exception ex) {
-            //Nunca entraremos acá, porque la ubicación de la imagen es estática.
+            ex.printStackTrace();
+            System.err.println("NO SE PUDO CARGAR LA IMAGEN DE LA PELOTA");
+            System.exit(-1);
         }
         
         areaCircular = new Ellipse2D.Float(0, 0, grafico.getWidth(), grafico.getHeight());
@@ -93,6 +100,8 @@ public class Pelota extends Sprite{
                     
                     Thread.sleep(MS_POR_FPS);
                 }
+                
+                sfx_rebotar.play();
             } else if(movimientoHor.value != MOV_NULO && movimientoVer.value != MOV_NULO){
                 boolean noHaTocadoPaleta = true;
                 movimientoVer.value = (propietario == JUGADOR_1 ? MOV_ARRIBA : MOV_ABAJO);
@@ -104,8 +113,10 @@ public class Pelota extends Sprite{
                     
                     //IMPORTANTE: areaCircular.intersects(posJ1) hace lo mismo que pelota.checarColision(jugador1).
                     if(noHaTocadoPaleta){
-                        //Cuando la pelota chica con una paleta.
+                        //Cuando la pelota choca con una paleta.
                         if(areaCircular.intersects(posJ1) || areaCircular.intersects(posJ2)){
+                            sfx_rebotar.play();
+                            
                             //Actualizamos al propietario.
                             propietario = (areaCircular.intersects(posJ1) ? JUGADOR_1 : JUGADOR_2);
                             //La pelota rebota verticalmente.

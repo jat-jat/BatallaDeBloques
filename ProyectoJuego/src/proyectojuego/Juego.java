@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import javafx.scene.media.AudioClip;
 import javax.swing.JOptionPane;
 import static proyectojuego.Configuracion.*;
 
@@ -13,6 +14,7 @@ public class Juego extends javax.swing.JPanel {
     private Pelota pelota;
     private ColeccionBloques bloques;
     private AdminPoderes poderes;
+    private AudioClip sfx_bonus, sfx_golpeBloque, sfx_perderVida, sfx_rebotar;
     
     //Variables relacionadas con la barra de progreso.
     private final float alturaTotal;
@@ -20,6 +22,10 @@ public class Juego extends javax.swing.JPanel {
     
     public Juego() {
         initComponents();
+        
+        sfx_bonus = new AudioClip(getClass().getResource(SFX_OBTENCION_DE_BONUS).toString());
+        sfx_golpeBloque = new AudioClip(getClass().getResource(SFX_GOLPEAR_UN_BLOQUE).toString());
+        sfx_perderVida = new AudioClip(getClass().getResource(SFX_PERDER_UNA_VIDA).toString());
         
         alturaTotal = ESCENARIO_ALTO + BARRA_PUNTUACIONES_ALTO;
         posInfoJ2 = (short)((ESCENARIO_ANCHO / 8.0) * 3);
@@ -87,6 +93,8 @@ public class Juego extends javax.swing.JPanel {
                         x = bloques.checarColision(pelota);
                         //Cuando la pelota choca con un bloque
                         if (x != null){
+                            sfx_golpeBloque.play();
+                            
                             pelota.movimientoHor.value = !pelota.movimientoHor.value;
                             pelota.movimientoVer.value = !pelota.movimientoVer.value;
                             
@@ -117,6 +125,8 @@ public class Juego extends javax.swing.JPanel {
                     } else if(pelota.movimientoHor.value == MOV_NULO && pelota.movimientoVer.value == MOV_NULO){
                         //Cuando el juego termina.
                         boolean elJugador1Perdio = false, elJugador2Perdio = false;
+                        
+                        sfx_perderVida.play();
                         
                         //Quien se haya quedado con la propiedad de la pelota, pierde una vida.
                         if(pelota.propietario == JUGADOR_1){
@@ -160,6 +170,8 @@ public class Juego extends javax.swing.JPanel {
     private void aplicarPoder(InfoPoder poderObtenido){
         //Si el poder no es nulo, quiere decir que hubo colisión y el poder tocado desapareció
         if(poderObtenido != null){
+            sfx_bonus.play();
+            
             switch(poderObtenido.getTipo()){
                 case PUNTOS:
                     if(poderObtenido.getJugador() == JUGADOR_1)
