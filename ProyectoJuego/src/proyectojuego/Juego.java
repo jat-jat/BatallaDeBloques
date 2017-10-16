@@ -20,6 +20,8 @@ public class Juego extends javax.swing.JPanel {
     private final float alturaTotal;
     private final short posInfoJ2; //Posición en X donde se imprime la información del jugador #2.
     
+    private boolean renderizar;
+    
     public Juego() {
         initComponents();
         
@@ -29,6 +31,8 @@ public class Juego extends javax.swing.JPanel {
         
         alturaTotal = ESCENARIO_ALTO + BARRA_PUNTUACIONES_ALTO;
         posInfoJ2 = (short)((ESCENARIO_ANCHO / 8.0) * 3);
+        
+        renderizar = true;
         
         this.addKeyListener((new KeyListener() {
             @Override
@@ -87,7 +91,7 @@ public class Juego extends javax.swing.JPanel {
         
         Thread renderizacion = new Thread(() -> {
             AdminPoderes.TipoPoder x;
-            while(true){
+            while(renderizar){
                 try {
                     if(pelota.movimientoHor.value != MOV_NULO && pelota.movimientoVer.value != MOV_NULO){                        
                         x = bloques.checarColision(pelota);
@@ -252,6 +256,14 @@ public class Juego extends javax.swing.JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         renderizar(g);
+    }
+    
+    public void liberarRecursos(){
+        renderizar = false;
+        jugador1.destruir();
+        jugador2.destruir();
+        pelota.destruir();
+        poderes.destruir();
     }
     
     @SuppressWarnings("unchecked")

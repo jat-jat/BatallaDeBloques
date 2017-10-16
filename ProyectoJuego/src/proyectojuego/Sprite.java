@@ -45,6 +45,8 @@ public abstract class Sprite {
      */
     protected byte velocidadInicial;
     
+    private boolean ejecutar;
+    
     /**
      * Constructor por defecto.
      */
@@ -54,8 +56,9 @@ public abstract class Sprite {
         velocidad = VELOCIDAD_MIN;
         seEstaMoviendo = false;
         
+        ejecutar = true;
         Thread gestorDeMovimiento = new Thread(() -> {
-            while(true){
+            while(ejecutar){
                 try {
                     mover();
                 } catch (Exception e) {
@@ -192,5 +195,15 @@ public abstract class Sprite {
                 else if(c3 != null && pixelActual == PALETA_DE_COLORES_3)
                     img.setRGB(i, j, c3);
             }
+    }
+    
+    /**
+     * Destruye el hilo que controla el movimiento del Sprite.
+     * Ejecútelo cuando cierre la ventana de juego.
+     */
+    public void destruir(){
+        ejecutar = false;
+        movimientoHor.value = movimientoVer.value = MOV_NULO;
+        iniciarMovimiento();
     }
 }

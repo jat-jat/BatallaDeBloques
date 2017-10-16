@@ -40,6 +40,9 @@ public class Pelota extends Sprite{
      */
     private final Rectangle2D.Float posJ1, posJ2;
     
+    /**
+     * Sonido cuando la pelota rebota.
+     */
     private final AudioClip sfx_rebotar;
     
     /**

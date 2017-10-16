@@ -204,4 +204,10 @@ public class AdminPoderes extends Sprite{
             lienzo.drawString(Character.toString(caracter), posX + addX, posY + addY);
         }
     }
+    
+    @Override
+    public void destruir(){
+        poderes.clear();
+        super.destruir();
+    }
 }
